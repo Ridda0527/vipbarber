@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VIP Barber — Little Rock, AR</title>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #080808;
+    --dark: #111;
+    --card: #181818;
+    --border: #222;
+    --red: #c0392b;
+    --red2: #a93226;
+    --gold: #c9a84c;
+    --text: #f0ede8;
+    --muted: #666;
+    --muted2: #444;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Barlow', sans-serif;
+    background: var(--black);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    height: 64px;
+    background: rgba(8,8,8,0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    letter-spacing: 3px;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .nav-logo span { color: var(--red); }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--text); }
+
+  .nav-book {
+    background: var(--red);
+    color: white !important;
+    padding: 8px 20px;
+    border-radius: 6px;
+    transition: background 0.2s !important;
+  }
+
+  .nav-book:hover { background: var(--red2) !important; color: white !important; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: 64px 0 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -200px; right: -200px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(192,57,43,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-left {
+    padding: 80px 40px 80px 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .hero-eyebrow {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    width: 30px;
+    height: 2px;
+    background: var(--red);
+  }
+
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(60px, 7vw, 100px);
+    line-height: 0.9;
+    letter-spacing: 2px;
+    margin-bottom: 24px;
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    color: var(--red);
+    display: block;
+  }
+
+  .hero-sub {
+    font-size: 16px;
+    font-weight: 300;
+    color: #999;
+    line-height: 1.7;
+    max-width: 380px;
+    margin-bottom: 40px;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--red);
+    color: white;
+    text-decoration: none;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 14px 28px;
+    border-radius: 6px;
+    transition: background 0.2s, transform 0.1s;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-primary:hover { background: var(--red2); transform: translateY(-1px); }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    color: var(--text);
+    text-decoration: none;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 14px 28px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    transition: border-color 0.2s, transform 0.1s;
+    cursor: pointer;
+  }
+
+  .btn-secondary:hover { border-color: #444; transform: translateY(-1px); }
+
+  .hero-stats {
+    display: flex;
+    gap: 40px;
+    margin-top: 48px;
+    padding-top: 40px;
+    border-top: 1px solid var(--border);
+  }
+
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    color: var(--gold);
+    letter-spacing: 1px;
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* ── CHAT PANEL (right side of hero) ── */
+  .hero-right {
+    padding: 100px 80px 80px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .chat-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+    align-self: flex-start;
+  }
+
+  .chat-widget {
+    width: 100%;
+    max-width: 420px;
+    background: var(--dark);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 520px;
+    box-shadow: 0 0 60px rgba(192,57,43,0.08);
+  }
+
+  .chat-head {
+    background: #0f0808;
+    border-bottom: 1px solid rgba(192,57,43,0.2);
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .chat-av {
+    width: 40px; height: 40px;
+    background: var(--red);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+
+  .chat-head-info { flex: 1; }
+  .chat-head-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--text);
+  }
+
+  .chat-head-status {
+    font-size: 11px;
+    color: #4ade80;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 2px;
+  }
+
+  .status-dot {
+    width: 6px; height: 6px;
+    background: #4ade80;
+    border-radius: 50%;
+    animation: blink 2s infinite;
+  }
+
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  .chat-msgs {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    scroll-behavior: smooth;
+  }
+
+  .chat-msgs::-webkit-scrollbar { width: 3px; }
+  .chat-msgs::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  .cmsg { display: flex; gap: 8px; animation: msgIn 0.25s ease; }
+  @keyframes msgIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+  .cmsg.user { flex-direction: row-reverse; }
+
+  .cmsg-icon {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; flex-shrink: 0; margin-top: 2px;
+  }
+
+  .cmsg.bot .cmsg-icon { background: var(--red); }
+  .cmsg.user .cmsg-icon { background: var(--card); border: 1px solid var(--border); }
+
+  .cbubble {
+    max-width: 82%;
+    padding: 10px 14px;
+    border-radius: 16px;
+    font-size: 13px;
+    line-height: 1.55;
+  }
+
+  .cmsg.bot .cbubble { background: var(--card); border: 1px solid var(--border); border-top-left-radius: 4px; color: var(--text); }
+  .cmsg.user .cbubble { background: var(--red); color: white; border-top-right-radius: 4px; font-weight: 500; }
+
+  .typing-wrap { display: none; padding: 0 14px 8px; }
+  .typing-wrap.show { display: flex; gap: 8px; }
+  .tdots { display:flex; gap:3px; padding:10px 14px; background:var(--card); border:1px solid var(--border); border-radius:16px; border-top-left-radius:4px; }
+  .tdots span { width:5px;height:5px;background:var(--muted);border-radius:50%;animation:tdot 1.1s infinite; }
+  .tdots span:nth-child(2){animation-delay:.15s}
+  .tdots span:nth-child(3){animation-delay:.3s}
+  @keyframes tdot{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
+
+  .quick-btns { padding: 0 14px 10px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .qb {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: #888;
+    border-radius: 100px;
+    padding: 5px 12px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .qb:hover { border-color: var(--red); color: #ff8a82; }
+
+  /* LEAD FORM */
+  .lead-form {
+    display: none;
+    flex-direction: column;
+    gap: 7px;
+    padding: 10px 14px;
+    background: #141414;
+    border-top: 1px solid var(--border);
+  }
+  .lead-form.show { display: flex; }
+  .lf-title { font-family: 'Barlow Condensed', sans-serif; font-size: 12px; letter-spacing: 1px; color: var(--gold); font-weight: 600; }
+  .lf-row { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .lead-form input {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; color: var(--text);
+    font-family: 'Barlow', sans-serif; font-size: 12px;
+    padding: 8px 10px; outline: none; width: 100%;
+    transition: border-color 0.2s;
+  }
+  .lead-form input:focus { border-color: var(--red); }
+  .lf-submit {
+    background: var(--red); color: white; border: none;
+    border-radius: 8px; padding: 9px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px; letter-spacing: 1px; font-weight: 600;
+    cursor: pointer; transition: background 0.2s;
+  }
+  .lf-submit:hover { background: var(--red2); }
+  .lf-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  .lead-done { display: none; text-align: center; padding: 10px 14px; border-top: 1px solid var(--border); color: #4ade80; font-size: 12px; font-weight: 500; }
+  .lead-done.show { display: block; }
+
+  .chat-input-row {
+    display: flex; gap: 8px; align-items: flex-end;
+    padding: 10px 14px; border-top: 1px solid var(--border);
+  }
+  .chat-input-row textarea {
+    flex: 1; background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; color: var(--text);
+    font-family: 'Barlow', sans-serif; font-size: 13px;
+    padding: 9px 12px; outline: none; resize: none;
+    max-height: 80px; line-height: 1.5; transition: border-color 0.2s;
+  }
+  .chat-input-row textarea:focus { border-color: var(--red); }
+  .chat-input-row textarea::placeholder { color: var(--muted); }
+  .send-btn {
+    width: 38px; height: 38px; background: var(--red); border: none;
+    border-radius: 10px; cursor: pointer; display: flex;
+    align-items: center; justify-content: center; flex-shrink: 0;
+    transition: background 0.2s, transform 0.1s;
+  }
+  .send-btn:hover { background: var(--red2); }
+  .send-btn:active { transform: scale(0.92); }
+  .send-btn svg { width: 15px; height: 15px; fill: white; }
+
+  /* book link in chat */
+  .book-link {
+    display: inline-block; margin-top: 6px;
+    background: var(--red); color: white; text-decoration: none;
+    font-family: 'Barlow Condensed', sans-serif; font-size: 12px;
+    letter-spacing: 1px; font-weight: 600;
+    padding: 6px 14px; border-radius: 6px;
+    transition: background 0.2s;
+  }
+  .book-link:hover { background: var(--red2); }
+
+  /* services mini card */
+  .svc-mini { background: #141414; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-top: 6px; }
+  .svc-mini-row { display: flex; justify-content: space-between; padding: 7px 12px; border-bottom: 1px solid var(--border); font-size: 12px; }
+  .svc-mini-row:last-child { border-bottom: none; }
+  .svc-mini-row span:last-child { color: var(--gold); font-weight: 600; }
+
+  /* ── SERVICES SECTION ── */
+  .section { padding: 100px 80px; }
+  .section-tag {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px; font-weight: 600;
+    letter-spacing: 3px; text-transform: uppercase;
+    color: var(--red); margin-bottom: 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-tag::before { content:''; width:24px; height:2px; background:var(--red); }
+
+  .section h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(40px, 5vw, 64px);
+    letter-spacing: 2px; line-height: 1;
+    margin-bottom: 48px;
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .svc-card {
+    background: var(--dark);
+    padding: 32px 28px;
+    transition: background 0.2s;
+    position: relative;
+  }
+
+  .svc-card:hover { background: var(--card); }
+
+  .svc-card .svc-price {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    color: var(--gold);
+    letter-spacing: 1px;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .svc-card .svc-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .svc-card .svc-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .svc-card .svc-duration {
+    font-size: 11px;
+    color: var(--muted2);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-top: 12px;
+    font-weight: 500;
+  }
+
+  /* ── HOURS ── */
+  .hours-section {
+    padding: 100px 80px;
+    background: var(--dark);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .hours-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+  }
+
+  .hours-table { width: 100%; }
+  .hours-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 15px;
+  }
+  .hours-row:last-child { border-bottom: none; }
+  .hours-row .day { color: #888; font-weight: 300; }
+  .hours-row .time { color: var(--text); font-weight: 500; }
+  .hours-row .closed { color: var(--red); font-weight: 500; }
+
+  .location-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+  }
+
+  .location-card h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px; font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+    color: var(--text);
+  }
+
+  .location-detail {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+    font-size: 14px;
+    color: #888;
+    align-items: flex-start;
+  }
+
+  .location-detail .icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .location-detail a { color: var(--gold); text-decoration: none; }
+  .location-detail a:hover { text-decoration: underline; }
+
+  .map-btn {
+    display: block;
+    width: 100%;
+    margin-top: 24px;
+    padding: 13px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px; font-weight: 600;
+    letter-spacing: 1px; text-transform: uppercase;
+    text-align: center;
+    text-decoration: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .map-btn:hover { border-color: var(--red); background: rgba(192,57,43,0.05); }
+
+  /* ── BOOK SECTION ── */
+  .book-section {
+    padding: 100px 80px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .book-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(192,57,43,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .book-section h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 6vw, 80px);
+    letter-spacing: 2px; line-height: 1;
+    margin-bottom: 16px;
+  }
+
+  .book-section p { color: #888; font-size: 16px; font-weight: 300; margin-bottom: 40px; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  footer .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px; letter-spacing: 2px; color: var(--text);
+  }
+
+  footer p { font-size: 12px; color: var(--muted); }
+
+  /* ── MOBILE ── */
+  @media (max-width: 900px) {
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    .hero { grid-template-columns: 1fr; }
+    .hero-left { padding: 100px 24px 40px; }
+    .hero-right { padding: 0 24px 60px; }
+    .chat-widget { max-width: 100%; }
+    .section { padding: 60px 24px; }
+    .hours-section { padding: 60px 24px; }
+    .hours-grid { grid-template-columns: 1fr; gap: 40px; }
+    .book-section { padding: 60px 24px; }
+    footer { padding: 24px; flex-direction: column; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">VIP <span>BARBER</span></div>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#hours">Hours</a></li>
+    <li><a href="#chat">AI Assistant</a></li>
+    <li><a href="https://vipbarber.glossgenius.com/book" target="_blank" class="nav-book">Book Now</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="chat">
+  <div class="hero-left">
+    <div class="hero-eyebrow">Little Rock, AR</div>
+    <h1>FRESH CUTS.<br><em>SHARP LOOKS.</em><br>VIP STYLE.</h1>
+    <p class="hero-sub">Premium barbershop experience in Little Rock. Modern fades, clean beard trims, and VIP treatment — every time.</p>
+    <div class="hero-actions">
+      <a href="https://vipbarber.glossgenius.com/book" target="_blank" class="btn-primary">Book Appointment →</a>
+      <a href="#services" class="btn-secondary">See Services</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="stat-num">5★</div>
+        <div class="stat-label">Rating</div>
+      </div>
+      <div>
+        <div class="stat-num">$35+</div>
+        <div class="stat-label">Starting price</div>
+      </div>
+      <div>
+        <div class="stat-num">6 Days</div>
+        <div class="stat-label">Open weekly</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="chat-label">💬 Ask our AI assistant anything</div>
+    <div class="chat-widget">
+      <div class="chat-head">
+        <div class="chat-av">✂️</div>
+        <div class="chat-head-info">
+          <div class="chat-head-name">VIP BARBER AI</div>
+          <div class="chat-head-status"><div class="status-dot"></div> Online · Replies instantly</div>
+        </div>
+      </div>
+
+      <div class="chat-msgs" id="msgs"></div>
+
+      <div class="typing-wrap" id="typing">
+        <div class="cmsg-icon" style="background:var(--red);width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0">✂️</div>
+        <div class="tdots"><span></span><span></span><span></span></div>
+      </div>
+
+      <div class="quick-btns" id="qbtns">
+        <button class="qb" onclick="csend('What services do you offer?')">Services</button>
+        <button class="qb" onclick="csend('What are your hours?')">Hours</button>
+        <button class="qb" onclick="csend('How do I book an appointment?')">Book</button>
+        <button class="qb" onclick="csend('Where are you located?')">Location</button>
+      </div>
+
+      <div class="lead-form" id="lead-form">
+        <div class="lf-title">💈 LEAVE YOUR INFO — WE'LL REACH OUT</div>
+        <div class="lf-row">
+          <input type="text" id="lf-name" placeholder="Your name">
+          <input type="text" id="lf-phone" placeholder="Phone number">
+        </div>
+        <button class="lf-submit" id="lf-btn" onclick="submitLead()">SEND MY INFO →</button>
+      </div>
+
+      <div class="lead-done" id="lead-done">✅ Got it! We'll reach out to confirm your appointment.</div>
+
+      <div class="chat-input-row">
+        <textarea id="cinput" rows="1" placeholder="Ask anything..." onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+        <button class="send-btn" onclick="csend()">
+          <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="section" id="services">
+  <div class="section-tag">What we offer</div>
+  <h2>OUR SERVICES</h2>
+  <div class="services-grid">
+    <div class="svc-card">
+      <div class="svc-price">$35+</div>
+      <div class="svc-name">Haircut</div>
+      <div class="svc-desc">Modern fade with a seamless blend from short to longer lengths. Clean, sharp, and always fresh.</div>
+      <div class="svc-duration">35 min</div>
+    </div>
+    <div class="svc-card">
+      <div class="svc-price">$45+</div>
+      <div class="svc-name">Haircut & Beard Trim</div>
+      <div class="svc-desc">The full package — fresh haircut and clean beard trim at a discounted combo price.</div>
+      <div class="svc-duration">50 min</div>
+    </div>
+    <div class="svc-card">
+      <div class="svc-price">$20+</div>
+      <div class="svc-name">Beard Trim</div>
+      <div class="svc-desc">Precise shaping, clean lines, and attention to detail. Professional finish every time.</div>
+      <div class="svc-duration">20 min</div>
+    </div>
+    <div class="svc-card">
+      <div class="svc-price">$30+</div>
+      <div class="svc-name">Kids Haircut</div>
+      <div class="svc-desc">Friendly, stress-free haircuts for kids with clean, cool styles they'll love.</div>
+      <div class="svc-duration">25+ min</div>
+    </div>
+    <div class="svc-card">
+      <div class="svc-price">Ask us</div>
+      <div class="svc-name">VIP Haircut</div>
+      <div class="svc-desc">The premium experience. Everything included for clients who want the best.</div>
+      <div class="svc-duration">Premium</div>
+    </div>
+    <div class="svc-card">
+      <div class="svc-price">Ask us</div>
+      <div class="svc-name">Facial Steam & LED Mask</div>
+      <div class="svc-desc">Advanced skin treatment with steam and LED light therapy for a refreshed look.</div>
+      <div class="svc-duration">Varies</div>
+    </div>
+    <div class="svc-card">
+      <div class="svc-price">Ask us</div>
+      <div class="svc-name">Hot Towel Facial Cleansing</div>
+      <div class="svc-desc">Classic hot towel treatment for a deep clean and relaxing experience.</div>
+      <div class="svc-duration">Varies</div>
+    </div>
+    <div class="svc-card">
+      <div class="svc-price">Ask us</div>
+      <div class="svc-name">Hair & Beard Coloring</div>
+      <div class="svc-desc">Black coloring for hair and beard to keep your look sharp and consistent.</div>
+      <div class="svc-duration">Varies</div>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:40px">
+    <a href="https://vipbarber.glossgenius.com/book" target="_blank" class="btn-primary">Book Any Service →</a>
+  </div>
+</section>
+
+<!-- HOURS & LOCATION -->
+<section class="hours-section" id="hours">
+  <div class="hours-grid">
+    <div>
+      <div class="section-tag">When we're open</div>
+      <h2>HOURS</h2>
+      <div class="hours-table">
+        <div class="hours-row"><span class="day">Monday</span><span class="closed">Closed</span></div>
+        <div class="hours-row"><span class="day">Tuesday</span><span class="time">10:00 AM – 8:00 PM</span></div>
+        <div class="hours-row"><span class="day">Wednesday</span><span class="time">10:00 AM – 8:00 PM</span></div>
+        <div class="hours-row"><span class="day">Thursday</span><span class="time">10:00 AM – 8:00 PM</span></div>
+        <div class="hours-row"><span class="day">Friday</span><span class="time">10:00 AM – 8:00 PM</span></div>
+        <div class="hours-row"><span class="day">Saturday</span><span class="time">10:00 AM – 8:00 PM</span></div>
+        <div class="hours-row"><span class="day">Sunday</span><span class="time">10:00 AM – 8:00 PM</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="section-tag">Find us</div>
+      <h2>LOCATION</h2>
+      <div class="location-card">
+        <h3>VIP BARBER</h3>
+        <div class="location-detail">
+          <span class="icon">📍</span>
+          <span>3408 S University Ave, Suite 6<br>Little Rock, AR 72204</span>
+        </div>
+        <div class="location-detail">
+          <span class="icon">🌐</span>
+          <a href="https://vipbarber.glossgenius.com" target="_blank">vipbarber.glossgenius.com</a>
+        </div>
+        <div class="location-detail">
+          <span class="icon">📅</span>
+          <span>Book online anytime — our AI assistant above can answer all your questions instantly</span>
+        </div>
+        <a href="https://www.google.com/maps/search/?api=1&query=3408+S+University+Ave+Ste+6+Little+Rock+AR+72204" target="_blank" class="map-btn">Open in Google Maps →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOK CTA -->
+<section class="book-section">
+  <div class="section-tag" style="justify-content:center;margin-bottom:20px">Ready to look fresh?</div>
+  <h2>BOOK YOUR<br>APPOINTMENT</h2>
+  <p>Online booking is fast, easy, and available 24/7.<br>Or ask our AI assistant any questions first.</p>
+  <a href="https://vipbarber.glossgenius.com/book" target="_blank" class="btn-primary" style="font-size:17px;padding:18px 40px">Book Now →</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">VIP BARBER</div>
+  <p>3408 S University Ave, Suite 6 · Little Rock, AR 72204</p>
+  <p style="color:var(--muted2)">© 2026 VIP Barber. All rights reserved.</p>
+</footer>
+
+<script>
+emailjs.init('h7tqxcVBRkJQEgrWe');
+
+const API = 'https://vipbarber.vercel.app/api/chat';
+const SYS = `You are the AI assistant for VIP BARBER in Little Rock AR. Address: 3408 S University Ave Ste 6. Book at: https://vipbarber.glossgenius.com/book. Hours: Monday CLOSED, Tue-Sun 10AM-8PM. Services: Haircut $35+, Haircut & Beard Trim $45+, Beard Trim $20+, Kids Haircut $30+, VIP Haircut (premium), Facial Steam & LED Mask, Face Waxing/Threading, Hair/Beard Black Coloring, Hair Wash, Hot Towel Facial Cleansing. Be friendly, cool, 2-3 sentences max. Always end with booking CTA. After 3 messages suggest they leave contact info.`;
+
+let hist = [], count = 0, leadShown = false, leadDone = false;
+
+function addMsg(role, html) {
+  const wrap = document.getElementById('msgs');
+  const d = document.createElement('div');
+  d.className = 'cmsg ' + role;
+  d.innerHTML = '<div class="cmsg-icon">' + (role==='bot'?'✂️':'🧑') + '</div><div class="cbubble">' + html + '</div>';
+  wrap.appendChild(d);
+  wrap.scrollTop = wrap.scrollHeight;
+}
+
+function showTyping() { document.getElementById('typing').classList.add('show'); document.getElementById('msgs').scrollTop=99999; }
+function hideTyping() { document.getElementById('typing').classList.remove('show'); }
+
+function svcMini() {
+  return '<div class="svc-mini">' +
+    '<div class="svc-mini-row"><span>✂️ Haircut</span><span>$35+</span></div>' +
+    '<div class="svc-mini-row"><span>✂️ Haircut & Beard Trim</span><span>$45+</span></div>' +
+    '<div class="svc-mini-row"><span>🧔 Beard Trim</span><span>$20+</span></div>' +
+    '<div class="svc-mini-row"><span>👦 Kids Haircut</span><span>$30+</span></div>' +
+    '</div>';
+}
+
+async function csend(text) {
+  const input = document.getElementById('cinput');
+  const msg = text || input.value.trim();
+  if (!msg) return;
+  input.value = ''; input.style.height = 'auto';
+  addMsg('user', msg);
+  count++;
+  document.getElementById('qbtns').style.display = 'none';
+  showTyping();
+
+  const contents = [
+    { role:'system', content: SYS },
+    ...hist,
+    { role:'user', content: msg }
+  ];
+
+  try {
+    const res = await fetch(API, {
+      method: 'POST',
+      headers: { 'Content-Type':'application/json' },
+      body: JSON.stringify({ model:'llama-3.3-70b-versatile', messages: contents, max_tokens:200, temperature:0.75 })
+    });
+    const data = await res.json();
+    hideTyping();
+
+    if (data.error) { addMsg('bot','Error: '+data.error.message); return; }
+    let reply = data.choices?.[0]?.message?.content || '';
+    if (!reply) { addMsg('bot','Try again!'); return; }
+    reply = reply.replace(/\*\*(.*?)\*\*/g,'$1').replace(/\*(.*?)\*/g,'$1').trim();
+
+    hist.push({role:'user',content:msg});
+    hist.push({role:'assistant',content:reply});
+
+    let extra = '';
+    if (/book|appointment|schedule/i.test(reply+msg)) {
+      extra += '<br><a class="book-link" href="https://vipbarber.glossgenius.com/book" target="_blank">BOOK NOW →</a>';
+    }
+    if (count===1 || /service|price|cost|how much/i.test(msg)) {
+      extra += svcMini();
+    }
+    addMsg('bot', reply+extra);
+
+    if (count>=3 && !leadShown && !leadDone) {
+      leadShown = true;
+      setTimeout(()=>{ document.getElementById('lead-form').classList.add('show'); document.getElementById('msgs').scrollTop=99999; }, 700);
+    }
+  } catch(e) {
+    hideTyping();
+    addMsg('bot','Connection issue — <a href="https://vipbarber.glossgenius.com/book" target="_blank" style="color:#c9a84c">book online here!</a>');
+  }
+}
+
+function submitLead() {
+  const name = document.getElementById('lf-name').value.trim();
+  const phone = document.getElementById('lf-phone').value.trim();
+  if (!name||!phone) { alert('Drop your name and number!'); return; }
+  const btn = document.getElementById('lf-btn');
+  btn.textContent = 'Sending...'; btn.disabled = true;
+  emailjs.send('service_o1hzo7p','template_ryitmkd',{
+    lead_name: name, lead_phone: phone,
+    time: new Date().toLocaleString('en-US',{dateStyle:'medium',timeStyle:'short'})
+  }).then(()=>{
+    document.getElementById('lead-form').classList.remove('show');
+    document.getElementById('lead-done').classList.add('show');
+    leadDone = true;
+    addMsg('bot','Bet '+name+'! We got your info and will hit you up soon. See you at VIP Barber! 💈');
+  }).catch(err=>{
+    btn.textContent='SEND MY INFO →'; btn.disabled=false;
+    addMsg('bot','Had trouble — just book online or call us!');
+  });
+}
+
+function handleKey(e) { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();csend();} }
+function autoResize(el) { el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,80)+'px'; }
+
+window.onload = () => {
+  addMsg('bot','Ay, welcome to VIP Barber! ✂️ I\'m your AI assistant — we\'re at 3408 S University Ave in Little Rock, open Tue–Sun 10 AM to 8 PM. What can I help you with today?');
+};
+</script>
+</body>
+</html>
