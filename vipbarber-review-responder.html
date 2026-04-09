@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VIP Barber — AI Review Responder</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #080808;
+    --dark: #111;
+    --card: #181818;
+    --border: #222;
+    --red: #c0392b;
+    --red2: #a93226;
+    --gold: #c9a84c;
+    --text: #f0ede8;
+    --muted: #666;
+    --green: #4ade80;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Barlow', sans-serif;
+    background: var(--black);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px 80px;
+  }
+
+  /* header */
+  .header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  .eyebrow {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .eyebrow::before, .eyebrow::after {
+    content: '';
+    width: 24px;
+    height: 2px;
+    background: var(--red);
+  }
+
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(40px, 6vw, 72px);
+    letter-spacing: 3px;
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+
+  h1 span { color: var(--red); }
+
+  .subtitle {
+    font-size: 14px;
+    color: var(--muted);
+    font-weight: 300;
+    letter-spacing: 0.5px;
+  }
+
+  /* main card */
+  .card {
+    width: 100%;
+    max-width: 780px;
+    background: var(--dark);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+  }
+
+  .card-header {
+    background: #0f0808;
+    border-bottom: 1px solid rgba(192,57,43,0.2);
+    padding: 18px 28px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .card-icon {
+    width: 44px; height: 44px;
+    background: var(--red);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .card-header-text h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--text);
+  }
+
+  .card-header-text p {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .card-body { padding: 28px; }
+
+  /* stars */
+  .stars-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .stars-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-right: 4px;
+  }
+
+  .star {
+    font-size: 28px;
+    cursor: pointer;
+    color: var(--border);
+    transition: color 0.15s, transform 0.1s;
+    user-select: none;
+  }
+
+  .star:hover, .star.active { color: var(--gold); }
+  .star:hover { transform: scale(1.15); }
+
+  .star-count {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    color: var(--gold);
+    margin-left: 8px;
+  }
+
+  /* tone selector */
+  .tone-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .tone-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    width: 100%;
+    margin-bottom: 4px;
+  }
+
+  .tone-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    color: var(--muted);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    padding: 7px 18px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+
+  .tone-btn:hover { border-color: var(--red); color: var(--text); }
+  .tone-btn.active { background: var(--red); border-color: var(--red); color: white; }
+
+  /* textarea */
+  .field-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  textarea {
+    width: 100%;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--text);
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+    line-height: 1.7;
+    padding: 16px 18px;
+    outline: none;
+    resize: vertical;
+    min-height: 120px;
+    transition: border-color 0.2s;
+  }
+
+  textarea:focus { border-color: var(--red); }
+  textarea::placeholder { color: var(--muted); }
+
+  /* generate btn */
+  .gen-btn {
+    width: 100%;
+    margin-top: 20px;
+    padding: 16px;
+    background: var(--red);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 3px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .gen-btn:hover { background: var(--red2); }
+  .gen-btn:active { transform: scale(0.99); }
+  .gen-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* spinner */
+  .spinner {
+    width: 20px; height: 20px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: none;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* divider */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 28px 0;
+    position: relative;
+  }
+
+  .divider-label {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--dark);
+    padding: 0 14px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* response area */
+  .response-wrap {
+    display: none;
+  }
+
+  .response-wrap.show { display: block; }
+
+  .response-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .response-tag {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--green);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .response-tag::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--green);
+    border-radius: 50%;
+  }
+
+  .response-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text);
+    white-space: pre-wrap;
+    position: relative;
+    min-height: 80px;
+  }
+
+  .response-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+  }
+
+  .action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 9px 18px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .action-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .action-btn.copied { border-color: var(--green); color: var(--green); }
+
+  .action-btn.regen { border-color: var(--border); }
+  .action-btn.regen:hover { border-color: var(--red); color: var(--red); }
+
+  /* history */
+  .history-section {
+    width: 100%;
+    max-width: 780px;
+    margin-top: 32px;
+  }
+
+  .history-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .history-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .history-item {
+    background: var(--dark);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 10px;
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  .history-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+
+  .history-stars { color: var(--gold); font-size: 13px; }
+
+  .history-time {
+    font-size: 11px;
+    color: var(--muted);
+    margin-left: auto;
+  }
+
+  .history-review {
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 8px;
+    font-style: italic;
+    border-left: 2px solid var(--border);
+    padding-left: 10px;
+    line-height: 1.6;
+  }
+
+  .history-response {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  .history-copy {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--muted);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    letter-spacing: 1px;
+    padding: 5px 12px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: all 0.2s;
+  }
+
+  .history-copy:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* tips */
+  .tips {
+    width: 100%;
+    max-width: 780px;
+    margin-top: 32px;
+    background: var(--dark);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px 28px;
+  }
+
+  .tips-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 14px;
+    font-weight: 700;
+  }
+
+  .tip {
+    display: flex;
+    gap: 12px;
+    font-size: 13px;
+    color: #888;
+    line-height: 1.6;
+    margin-bottom: 10px;
+  }
+
+  .tip:last-child { margin-bottom: 0; }
+  .tip-icon { flex-shrink: 0; font-size: 15px; }
+
+  @media (max-width: 600px) {
+    .card-body { padding: 20px; }
+    h1 { font-size: 38px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="eyebrow">VIP Barber · Little Rock AR</div>
+  <h1>AI REVIEW<br><span>RESPONDER</span></h1>
+  <p class="subtitle">Paste a Google review → get a perfect response in seconds</p>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div class="card-icon">⭐</div>
+    <div class="card-header-text">
+      <h2>GENERATE RESPONSE</h2>
+      <p>Powered by AI · Trained on VIP Barber's voice</p>
+    </div>
+  </div>
+
+  <div class="card-body">
+
+    <!-- Star Rating -->
+    <div class="stars-row">
+      <span class="stars-label">Review Rating</span>
+      <span class="star" onclick="setStar(1)">★</span>
+      <span class="star" onclick="setStar(2)">★</span>
+      <span class="star" onclick="setStar(3)">★</span>
+      <span class="star" onclick="setStar(4)">★</span>
+      <span class="star" onclick="setStar(5)">★</span>
+      <span class="star-count" id="star-label">— stars</span>
+    </div>
+
+    <!-- Tone -->
+    <div class="tone-row">
+      <div class="tone-label">Response Tone</div>
+      <button class="tone-btn active" onclick="setTone(this, 'Friendly & Warm')">Friendly</button>
+      <button class="tone-btn" onclick="setTone(this, 'Professional')">Professional</button>
+      <button class="tone-btn" onclick="setTone(this, 'Cool & Casual')">Cool & Casual</button>
+      <button class="tone-btn" onclick="setTone(this, 'Grateful & Humble')">Grateful</button>
+    </div>
+
+    <!-- Review Input -->
+    <label class="field-label">Paste the Google review here</label>
+    <textarea id="review-input" placeholder="e.g. Best barbershop in Little Rock! Fresh fade every time, super clean shop, and the vibe is amazing. Will definitely be back!"></textarea>
+
+    <button class="gen-btn" id="gen-btn" onclick="generate()">
+      <div class="spinner" id="spinner"></div>
+      <span id="gen-label">✂️ GENERATE RESPONSE</span>
+    </button>
+
+    <div class="divider"><span class="divider-label">AI Response</span></div>
+
+    <div class="response-wrap" id="response-wrap">
+      <div class="response-header">
+        <div class="response-tag">Response Ready</div>
+      </div>
+      <div class="response-box" id="response-box"></div>
+      <div class="response-actions">
+        <button class="action-btn" id="copy-btn" onclick="copyResponse()">📋 Copy Response</button>
+        <button class="action-btn regen" onclick="generate()">🔄 Regenerate</button>
+      </div>
+    </div>
+
+    <div id="placeholder" style="text-align:center;padding:20px 0;color:var(--muted);font-size:13px">
+      Your AI-generated response will appear here
+    </div>
+
+  </div>
+</div>
+
+<!-- History -->
+<div class="history-section" id="history-section" style="display:none">
+  <div class="history-title">Recent Responses</div>
+  <div id="history-list"></div>
+</div>
+
+<!-- Tips -->
+<div class="tips">
+  <div class="tips-title">💡 Pro Tips — Getting More Reviews</div>
+  <div class="tip"><span class="tip-icon">📱</span><span>After every cut, say "If you enjoyed your visit, a quick Google review helps us out a ton!" — most happy clients will do it on the spot.</span></div>
+  <div class="tip"><span class="tip-icon">⚡</span><span>Respond to every review within 24 hours. Google rewards active businesses with higher Map rankings.</span></div>
+  <div class="tip"><span class="tip-icon">🎯</span><span>For negative reviews — always respond calmly and offer to make it right. Never argue. One good response can flip a bad impression.</span></div>
+  <div class="tip"><span class="tip-icon">🔗</span><span>Share your Google review link: <a href="https://share.google/eZDsLTQa4yCngDXOm" target="_blank" style="color:var(--gold)">share.google/eZDsLTQa4yCngDXOm</a> — text it to clients after their appointment.</span></div>
+</div>
+
+<script>
+  let selectedStars = 5;
+  let selectedTone = 'Friendly & Warm';
+  let history = [];
+
+  // Init stars to 5
+  window.onload = () => setStar(5);
+
+  function setStar(n) {
+    selectedStars = n;
+    document.querySelectorAll('.star').forEach((s, i) => {
+      s.classList.toggle('active', i < n);
+    });
+    const labels = ['', '1 star', '2 stars', '3 stars', '4 stars', '5 stars'];
+    document.getElementById('star-label').textContent = labels[n];
+  }
+
+  function setTone(el, tone) {
+    selectedTone = tone;
+    document.querySelectorAll('.tone-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  async function generate() {
+    const review = document.getElementById('review-input').value.trim();
+    if (!review) {
+      alert('Paste a review first!');
+      return;
+    }
+
+    const btn = document.getElementById('gen-btn');
+    const spinner = document.getElementById('spinner');
+    const label = document.getElementById('gen-label');
+    btn.disabled = true;
+    spinner.style.display = 'block';
+    label.textContent = 'GENERATING...';
+
+    const starWord = ['', 'one-star', 'two-star', 'three-star', 'four-star', 'five-star'][selectedStars];
+
+    const prompt = `You are responding to a Google review for VIP Barber, a premium barbershop in Little Rock, AR at 3408 S University Ave Suite 6. The owner is friendly, professional, and takes pride in every cut.
+
+The customer left a ${starWord} (${selectedStars}/5) Google review. Your response tone should be: ${selectedTone}.
+
+Guidelines:
+- Keep it 2-4 sentences max
+- Sound human and genuine, not corporate
+- Thank them by name if mentioned in the review
+- Mention VIP Barber naturally
+- For 5-star reviews: express genuine gratitude, invite them back
+- For 4-star reviews: thank them, ask what could make it perfect
+- For 1-3 star reviews: apologize sincerely, offer to make it right, provide phone number (501) 406-5264
+- Never be defensive or argumentative
+- End warmly — "See you soon!", "We appreciate you!", "You're always welcome at VIP Barber!" etc.
+- Do NOT use hashtags or emojis unless they feel very natural
+- Do NOT start with "Thank you for your review" — be more creative
+
+The review:
+"${review}"
+
+Write ONLY the response, nothing else. No quotes around it.`;
+
+    try {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1000,
+          messages: [{ role: 'user', content: prompt }]
+        })
+      });
+
+      const data = await res.json();
+      const reply = data.content?.[0]?.text?.trim();
+
+      if (!reply) throw new Error('No response');
+
+      document.getElementById('response-box').textContent = reply;
+      document.getElementById('response-wrap').classList.add('show');
+      document.getElementById('placeholder').style.display = 'none';
+      document.getElementById('copy-btn').textContent = '📋 Copy Response';
+      document.getElementById('copy-btn').classList.remove('copied');
+
+      // Add to history
+      addToHistory(review, reply, selectedStars);
+
+    } catch (e) {
+      alert('Error generating response. Check your connection and try again.');
+      console.error(e);
+    } finally {
+      btn.disabled = false;
+      spinner.style.display = 'none';
+      label.textContent = '✂️ GENERATE RESPONSE';
+    }
+  }
+
+  function copyResponse() {
+    const text = document.getElementById('response-box').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('copy-btn');
+      btn.textContent = '✅ Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = '📋 Copy Response';
+        btn.classList.remove('copied');
+      }, 2500);
+    });
+  }
+
+  function addToHistory(review, response, stars) {
+    const item = { review, response, stars, time: new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }) };
+    history.unshift(item);
+    if (history.length > 10) history.pop();
+    renderHistory();
+  }
+
+  function renderHistory() {
+    const section = document.getElementById('history-section');
+    const list = document.getElementById('history-list');
+    section.style.display = 'block';
+    list.innerHTML = history.map((item, i) => `
+      <div class="history-item">
+        <div class="history-meta">
+          <span class="history-stars">${'★'.repeat(item.stars)}${'☆'.repeat(5 - item.stars)}</span>
+          <span class="history-time">${item.time}</span>
+        </div>
+        <div class="history-review">"${item.review.length > 120 ? item.review.slice(0,120)+'…' : item.review}"</div>
+        <div class="history-response">${item.response}</div>
+        <button class="history-copy" onclick="copyHistoryItem(${i})">Copy Response</button>
+      </div>
+    `).join('');
+  }
+
+  function copyHistoryItem(i) {
+    navigator.clipboard.writeText(history[i].response).then(() => {
+      const btns = document.querySelectorAll('.history-copy');
+      btns[i].textContent = '✅ Copied!';
+      setTimeout(() => { btns[i].textContent = 'Copy Response'; }, 2000);
+    });
+  }
+</script>
+</body>
+</html>
